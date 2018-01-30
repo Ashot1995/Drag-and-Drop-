@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .draggDiv {
+            height: 100px;
+            width: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="draggDiv" id="draggDiv"></div>
+    </div>
+</div>
+<script>
+    function f() {
+        function DraggConst(element) {
+            this.element = element;
+            var self = this;
+
+            function move(event) {
+                var originalLeft = parseInt(window.getComputedStyle(this).left);
+                var originalTop = parseInt(window.getComputedStyle(this).top);
+                // console.log(`${originalLeft} " " ${originalTop}`);
+                var mouseDownX = event.clientX;
+                var mouseDownY = event.clientY;
+
+
+                function dragMe(event) {
+                    self.element.style.left = originalLeft + event.clientX - mouseDownX + "px";
+                    self.element.style.top = originalTop + event.clientY - mouseDownY + "px";
+                    event.stopPropagation();
+
+                }
+
+                function dropMe(event) {
+                    document.removeEventListener("mousemove", dragMe, true);
+                    document.removeEventListener("mouseup", dropMe, true);
+                    event.stopPropagation();
+
+                }
+
+                document.addEventListener("mousemove", dragMe, true);
+                document.addEventListener("mouseup", dropMe, true);
+
+            }
+
+
+            this.element.addEventListener("mousedown", move, false);
+        }
+
+
+        var divEl = document.getElementById("draggDiv");
+        var newObj = new DraggConst(divEl);
+    }
+
+
+    window.addEventListener('load', f, false);
+</script>
+</body>
+</html>
